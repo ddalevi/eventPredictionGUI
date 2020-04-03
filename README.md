@@ -1,2 +1,3 @@
-# ddalevi
-event_prediction_gui
+# Event prediction shiny GUI
+
+This is some basic shiny code to run the functionality of the event prediction R-package available at: ...
