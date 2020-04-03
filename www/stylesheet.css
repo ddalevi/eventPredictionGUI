@@ -1,0 +1,14 @@
+body {
+    background-color: #f2f2f2;
+}
+
+
+.navbar {
+  background-color:  #006600;
+  color: #ffffff;
+  text-shadow:    none;
+}
+
+.navbar-sidebar{
+        width: 300px;
+      }
