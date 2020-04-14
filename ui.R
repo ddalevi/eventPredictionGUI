@@ -5,6 +5,7 @@ library( eventPrediction )
 
 
 source("params.R")
+source("about.R")
 
 VERSION <- 0.1
 
@@ -41,7 +42,8 @@ navbarPage( paste0( "Event Prediction GUI (v. ", VERSION, ")" ),
                 checkboxInput( "includeTitle", "Include title text", FALSE )
             )
      ) ),
-     tabPanel( "About" )
+     tabPanel( "About", 
+               htmlOutput( "aboutTxt" ) )
 )
 
 

@@ -29,12 +29,14 @@ getParamDefaultValues <- function(){
     "numChangePoints" = 0,
     "HR" =  0.6,
     "ctrlMedian" = 3,
+    "shape" = 1,
    
     "chP0" = 5, 
     "ctrlM0" = 3,
     "HR0" = 0.9999, 
     "ctrlM1" = 5,
     "HR1" = 0.3,
+    "shape1" = 1,
     
     # Prediction params
     "eventOrTime"= "Predict events|time",
@@ -65,6 +67,7 @@ validateParameters <- function( input, vals ) {
   validateParameterStrictPositive( input$studyDuration, "Study duration" )
   validateParameterStrictPositive( input$recDuration, "Recruitment duration" )
   validateParameterStrictPositive( input$ctrlMedian, "Control median survival" )
+  validateParameterStrictPositive( input$shape, "Weibull shape" )
   
   validate( need( input$studyDuration > input$recDuration, "Study period needs to be longer than recruitment period" ) )
   validate( need( input$startDate, "Need to provide a study start date"))
@@ -85,6 +88,7 @@ validateParameters <- function( input, vals ) {
     validate( need(input$HR1 < 1, "HR t>T needs to be less than 1"))
     validateParameterStrictPositive( input$ctrlM0, "ctrlM0" )
     validateParameterStrictPositive( input$ctrlM1, "ctrlM1" )
+    validateParameterStrictPositive( input$shape1, "Weibull shape" )
   }
   
   validateParameterBtw0and1( input$alpha, "alpha" )

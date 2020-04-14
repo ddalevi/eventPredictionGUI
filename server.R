@@ -34,6 +34,7 @@ shinyServer( function( input, output, session ) {
           N = mem.vals[["numPatients"]],
           study.duration = mem.vals[["studyDuration"]],
           ctrl.median = mem.vals[["ctrlMedian"]],
+          shape = mem.vals[["shape"]],
           k = mem.vals[["k"]],
           acc.period = mem.vals[["recDuration"]],
           two.sided = getTwoSided(),
@@ -53,6 +54,7 @@ shinyServer( function( input, output, session ) {
         N = mem.vals[["numPatients"]],
         study.duration = mem.vals[["studyDuration"]],
         ctrl.median = mem.vals[["ctrlM1"]],
+        shape = mem.vals[["shape1"]],
         k = mem.vals[["k"]],
         acc.period = mem.vals[["recDuration"]],
         two.sided = getTwoSided(),
@@ -112,7 +114,8 @@ shinyServer( function( input, output, session ) {
               list( 
                 selectInput( "useDropouts", "Use dropouts:", c( "Yes", "No" ), mem.vals[["useDropouts"]] ),
                 numericInput( "dropoutPropCtrl", "Proportion (ctrl): ", mem.vals[["dropoutPropCtrl"]], step=0.01, min=0, max=1 ),
-                numericInput( "dropoutPropExp", "Proportion (exp): ", mem.vals[["dropoutPropExp"]], step=0.01, min=0, max=1 )
+                numericInput( "dropoutPropExp", "Proportion (exp): ", mem.vals[["dropoutPropExp"]], step=0.01, min=0, max=1 ),
+                uiOutput( "paramsDescTxt" )
               )
             },
             "criticalEvents" = {
@@ -133,10 +136,14 @@ shinyServer( function( input, output, session ) {
                       "Control median (months):",
                       min = 0, value = mem.vals[["ctrlMedian"]] ),
         numericInput( "HR", "HR: ",
-                      min=0, value=mem.vals[["HR"]], step=0.05 ))
+                      min=0, value=mem.vals[["HR"]], step=0.05 ),
+        numericInput( "shape", "Shape: ",
+                      min=0, value=mem.vals[["shape"]], step=0.05 ))
     } else {
       list(
         numericInput( "chP0", "Change point (T, months): ", mem.vals[["chP0"]]),
+        numericInput( "shape1", "Shape: ",
+                      min=0, value=mem.vals[["shape1"]], step=0.05 ),
         numericInput( "ctrlM0",
                       "Control median t<T (months):",
                       min = 0, value = mem.vals[["ctrlMedian"]] ),
@@ -177,6 +184,10 @@ shinyServer( function( input, output, session ) {
       textInput( "eventPred", "Number of events: ", value=mem.vals[["eventPred"]])
     }
   })
+  
+  output$paramsDescTxt <- renderUI({
+    HTML( "<i>Note, annual dropout rates specified in the absence of events (competing risks may lead to a different proportion)</i>" )
+  })
     
   output$epPlot <- renderPlot({
     prediction <- getPrediction()
@@ -197,6 +208,9 @@ shinyServer( function( input, output, session ) {
       )
   })
   
+  output$aboutTxt <- renderText({
+    HTML( getAboutTxt() )
+  })
   
   #' Observe any changes and update values based on those
   #' 
@@ -226,4 +240,6 @@ shinyServer( function( input, output, session ) {
   observeEvent( input[[ iparams[21] ]], { mem.vals[[ iparams[21] ]] <- input[[ iparams[21] ]] })
   observeEvent( input[[ iparams[22] ]], { mem.vals[[ iparams[22] ]] <- input[[ iparams[22] ]] })
   observeEvent( input[[ iparams[23] ]], { mem.vals[[ iparams[23] ]] <- input[[ iparams[23] ]] })
+  observeEvent( input[[ iparams[24] ]], { mem.vals[[ iparams[24] ]] <- input[[ iparams[24] ]] })
+  observeEvent( input[[ iparams[25] ]], { mem.vals[[ iparams[25] ]] <- input[[ iparams[25] ]] })
 })
