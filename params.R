@@ -96,6 +96,35 @@ validateParameters <- function( input, vals ) {
 }
 
 
+# This function parses the arguments given in the URL and returns
+# A list with the parameter names and their values
+parseParameters <- function( query ){
+  vals <- list()
+  
+  # Numeric params 
+  for( e in c( "numPatients", "studyDuration", "recDuration", "k", "r", "chP0", 
+               "HR", "ctrlMedian", "shape", "ctrlM0", "HR0", "ctrlM1", "HR1", "shape1", "dropoutPropCtrl",
+               "dropoutPropExp", "alpha", "power" ) ){
+    if( !is.null( query[[ e ]] ) ){
+        xval <- as.numeric( query[[ e ]] )
+        if( !is.na(xval) ) {
+          vals[[ e ]] <- xval
+        }
+    }
+  }
+  # String params
+  for( e in c("timePred", "eventPred", "useDropouts", "twoSided"  ) ) {
+    if( !is.null( query[[ e ]] ) ){
+      xval <- as.character( query[[ e ]] )
+      if( !is.na(xval) ) {
+        vals[[ e ]] <- xval
+      }
+    }
+  }
+  
+  vals
+}
+
 getMultipleNumeric <- function( val, varName, maxValue = Inf ){
   validate( need(is.character(val) && val >"", "Need to provide prediction time points" ) )
   xvals <- strsplit( val, "," )[[1]]

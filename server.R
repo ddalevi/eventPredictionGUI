@@ -1,5 +1,6 @@
 
 shinyServer( function( input, output, session ) {
+
   
   #' Use rective values to remember all params needed.
   mem.vals <- reactiveValues()
@@ -7,6 +8,17 @@ shinyServer( function( input, output, session ) {
   for( iparam in names( def.param ) ){
     mem.vals[[ iparam ]] <- def.param[[ iparam ]] 
   }
+  
+  
+  # Read parameters from URL
+  observe({
+    query <- parseQueryString(session$clientData$url_search)
+    mylist <- parseParameters( query )
+    for( e in names( mylist ) ) {
+      mem.vals[[ e ]] <- mylist[[ e ]]
+    }
+  })
+  
   
   getTwoSided <- reactive({
     validate( need( mem.vals[["twoSided"]], "Loading ..." ) )
