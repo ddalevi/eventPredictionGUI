@@ -2,6 +2,7 @@
 
 getHelpTxt <- function(){
   paste0( 
+     "More information about the functionality can be found in the <a href='http://ec2-18-185-18-135.eu-central-1.compute.amazonaws.com/predict_from_parameters.pdf', target='_blank'>vignette</a>",
      "<h2>Parameters</h2>",
      "All parameters can be specified in the GUI but you can also give them default values in the URL <br>",
      "be adding their names and values at the end, e.g. www.YOURURL.com?HR=0.5&timePred=10,21&useDropouts=No<br><br>",
