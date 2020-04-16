@@ -3,7 +3,10 @@ library( shinythemes )
 library( anytime )
 library( eventPrediction )
 
-source("about.R")
+# Source helpfiles 
+source( "params.R" )
+source( "help.R" )
+source( "about.R" )
 
 VERSION <- 0.1
 
@@ -40,8 +43,9 @@ navbarPage( paste0( "Event Prediction GUI (v. ", VERSION, ")" ),
                 checkboxInput( "includeTitle", "Include title text", FALSE )
             )
      ) ),
-     tabPanel( "About", 
-               htmlOutput( "aboutTxt" ) )
+     tabPanel( "State", htmlOutput( "state" ) ),
+     tabPanel( "Help", htmlOutput( "helpTxt" ) ),
+     tabPanel( "About", htmlOutput( "aboutTxt" ) )
 )
 
 

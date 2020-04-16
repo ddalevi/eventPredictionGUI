@@ -1,4 +1,3 @@
-source("params.R")
 
 shinyServer( function( input, output, session ) {
 
@@ -222,6 +221,27 @@ shinyServer( function( input, output, session ) {
         dateInput( "startDate", "Study start date:"  ),
         checkboxInput( "useIntegers", "Months as integers:"  ) 
       )
+  })
+  
+  output$state <- renderUI({
+
+    wrapLines <- function(x, n=100) {
+      strsplit(x, paste0( "(?<=.{", n, "})" ), perl = TRUE)[[1]]
+    }
+    port <- session$clientData$url_port
+    baseurl <- session$clientData$url_hostname 
+    if( !is.null(port) && port > "" ) baseurl <- paste0( baseurl, ":", port )
+
+    myurl <- as.character( getURL( baseurl, mem.vals ) )    
+    myurl <- paste0( wrapLines(myurl), collapse = ' <br> '  )
+    mystr <- paste0( "The current state of the application can be reproduced by saving this URL: <br><br>" )
+    
+    list( HTML(  mystr ),
+          HTML( myurl ) )
+  })
+  
+  output$helpTxt <- renderText({
+    HTML( getHelpTxt() )
   })
   
   output$aboutTxt <- renderText({

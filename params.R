@@ -129,6 +129,7 @@ parseParameters <- function( query ){
   vals
 }
 
+
 getMultipleNumeric <- function( val, varName, maxValue = Inf ){
   xvals <- strsplit( val, "," )[[1]]
   validate( need(length(xvals)>0, "X2: Need to provide prediction time points" ) )
@@ -139,4 +140,17 @@ getMultipleNumeric <- function( val, varName, maxValue = Inf ){
     validate( need( xvals[i] <= maxValue, paste0( varName, " needs to be less than ", maxValue ) ) )
   }
   as.numeric( xvals )
+}
+
+getURL <- function( base, val ){
+  base <- paste0( base, "?" )
+  first <- TRUE
+  for( e in names(val) ){
+    if( !first ){
+      base <- paste0( base, "&" ) 
+    }
+    base <- paste0( base, e, "=", val[[e]] )
+    first <- FALSE
+  }
+  base
 }
