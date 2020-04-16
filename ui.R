@@ -3,8 +3,6 @@ library( shinythemes )
 library( anytime )
 library( eventPrediction )
 
-
-source("params.R")
 source("about.R")
 
 VERSION <- 0.1

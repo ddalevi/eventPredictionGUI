@@ -10,7 +10,7 @@ getAboutTxt <- function(){
      "<i>numPatients</i>: Number of patients in trial<br>",
      "<i>studyDuration</i>: Length of trial in months<br>", 
      "<i>recDuration</i>: Length of recruitment period in months<br>", 
-     "<i>k</i>: Recruitment shape parameter [0,1]<br>", 
+     "<i>k</i>: Recruitment shape parameter<br>", 
      "<i>r</i>: Randomization imbalance (number experimental arm/number in control arm)<br>", 
      "<i>HR</i>: Hazard ratio (0,1)<br>", 
      "<i>ctrlMedian</i>: Control median in months<br>", 

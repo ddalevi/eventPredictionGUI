@@ -1,3 +1,4 @@
+source("params.R")
 
 shinyServer( function( input, output, session ) {
 
@@ -17,6 +18,8 @@ shinyServer( function( input, output, session ) {
     for( e in names( mylist ) ) {
       mem.vals[[ e ]] <- mylist[[ e ]]
     }
+    # Hmm, not sure why this is needed
+    mem.vals[[ "timePred"]] <- as.character( mem.vals[[ "timePred"]] )
   })
   
   
@@ -35,8 +38,9 @@ shinyServer( function( input, output, session ) {
   })
   
   getStudy <- reactive({
+    validate( need( !is.null(mem.vals), "Loading .." ))
     validateParameters( input, mem.vals )
-    validateParameterStrictPositive( input$HR, "HR")
+    validateParameterStrictPositive( mem.vals[[ "HR" ]], "HR")
     if( mem.vals[["numChangePoints"]] == 0 ){
        Study(
           alpha = mem.vals[["alpha"]],
@@ -52,8 +56,8 @@ shinyServer( function( input, output, session ) {
           two.sided = getTwoSided(),
           dropout=getDropouts())
     } else {
-      validate( need( input$HR0, "Loading ..." ) )
-      validate( need( input$HR1, "Loading ..." ) )
+      validate( need( mem.vals[[ "HR0" ]], "Loading ..." ) )
+      validate( need( mem.vals[[ "HR1" ]], "Loading ..." ) )
       lagged <- LagEffect(
         Lag.T = mem.vals[["chP0"]],
         L.Ctr.median = mem.vals[["ctrlM0"]],
@@ -78,12 +82,12 @@ shinyServer( function( input, output, session ) {
   
   getPrediction <- reactive({
     study <- getStudy()
-    validate( need( input$eventOrTime, "Need prediction parameters" ) )
-    if( input$eventOrTime == "Predict events|time"  ){
-      xvals <- getMultipleNumeric( input$timePred, "Predict time", mem.vals[["studyDuration"]] ) 
+    validate( need( mem.vals[[ "eventOrTime" ]], "Need prediction parameters" ) )
+    if( mem.vals[[ "eventOrTime" ]] == "Predict events|time"  ){
+      xvals <- getMultipleNumeric( mem.vals[[ "timePred" ]], "Predict time", mem.vals[["studyDuration"]] ) 
       prediction <- predict(study, time.pred=xvals )
     } else {
-      xvals <- getMultipleNumeric( input$eventPred, "Number of predicted events", mem.vals[["numPatients"]] ) 
+      xvals <- getMultipleNumeric( mem.vals[[ "eventPred" ]], "Number of predicted events", mem.vals[["numPatients"]] ) 
       prediction <- predict( study, event.pred=xvals )
     }
     prediction

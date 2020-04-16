@@ -58,41 +58,45 @@ getParamDefaultValues <- function(){
   )}
 
 validateParameters <- function( input, vals ) {
-  validate( need( vals[["numChangePoints"]], "Loading.." ) )
-  validateParameterStrictPositive( input$HR, "HR")
-  validate( need(input$HR < 1, "HR needs to be less than 1"))
-  validateParameterStrictPositive( input$k, "Recruitment shape parameter")
-  validateParameterStrictPositive( input$r, "Randomization balance" ) 
   validateParameterStrictPositive( input$numPatients, "Number of patients" )
-  validateParameterStrictPositive( input$studyDuration, "Study duration" )
-  validateParameterStrictPositive( input$recDuration, "Recruitment duration" )
-  validateParameterStrictPositive( input$ctrlMedian, "Control median survival" )
-  validateParameterStrictPositive( input$shape, "Weibull shape" )
+  validate( need( vals[[ "numChangePoints" ]], "Loading.." ) )
+  validateParameterStrictPositive( vals[[ "HR" ]], "HR")
+  validate( need(vals[[ "HR" ]] < 1, "HR needs to be less than 1"))
+  validateParameterStrictPositive( vals[[ "k" ]], "Recruitment shape parameter")
+  validateParameterStrictPositive( vals[[ "r" ]], "Randomization balance" ) 
   
-  validate( need( input$studyDuration > input$recDuration, "Study period needs to be longer than recruitment period" ) )
-  validate( need( input$startDate, "Need to provide a study start date"))
-  validate( need( input$eventOrTime, "Need prediction parameters" ) )
-  if( input$eventOrTime == "Predict events|time"  ){
-    xvals <- getMultipleNumeric( input$timePred, "Predict time", vals[["studyDuration"]] ) 
-    validate( need( input$studyDuration >= max( xvals ), "Prediction time point exceeds study duration" ) )
+  validateParameterStrictPositive( vals[[ "studyDuration" ]], "Study duration" )
+  validateParameterStrictPositive( vals[[ "recDuration" ]], "Recruitment duration" )
+  validateParameterStrictPositive( vals[[ "ctrlMedian" ]], "Control median survival" )
+  validateParameterStrictPositive( vals[[ "shape" ]], "Weibull shape" )
+  
+  validate( need( vals[[ "studyDuration" ]] > vals[[ "recDuration" ]], 
+                  "Study period needs to be longer than recruitment period" ) )
+  validate( need( vals[[ "startDate" ]], "Need to provide a study start date"))
+  validate( need( vals[[ "eventOrTime" ]], "Need prediction parameters" ) )
+  if( vals[[ "eventOrTime" ]] == "Predict events|time"  ){
+    validate( need( !is.null( vals[[ "timePred" ]]), " Loading ... " ))  
+    xvals <- getMultipleNumeric( vals[[ "timePred" ]], "Predict time", vals[[ "studyDuration" ]] ) 
+    validate( need( vals[[ "studyDuration" ]] >= max( xvals ), "Prediction time point exceeds study duration" ) )
   } else {
-    xvals <- getMultipleNumeric( input$eventPred, "Number of predicted events", input$numPatients ) 
-    validate( need( input$numPatients >= max( xvals ), "Too few patients compared to predicted number of events" ) )
+    validate( need( !is.null( vals[[ "eventPred" ]]), " Loading ... " ) )  
+    xvals <- getMultipleNumeric( vals[[ "eventPred" ]], "Number of predicted events", vals[[ "numPatients" ]] ) 
+    validate( need( vals[[ "numPatients" ]] >= max( xvals ), "Too few patients compared to predicted number of events" ) )
   }
   
-  if( input$numChangePoints > 0 ){
-    validateParameterStrictPositive( input$chP0, "Change point (T)" )
-    validateParameterStrictPositive( input$HR0, "HR0")
-    validateParameterStrictPositive( input$HR1, "HR1")
-    validate( need(input$HR0 < 1, "HR t<T needs to be less than 1"))
-    validate( need(input$HR1 < 1, "HR t>T needs to be less than 1"))
-    validateParameterStrictPositive( input$ctrlM0, "ctrlM0" )
-    validateParameterStrictPositive( input$ctrlM1, "ctrlM1" )
-    validateParameterStrictPositive( input$shape1, "Weibull shape" )
+  if( vals[[ "numChangePoints" ]] > 0 ){
+    validateParameterStrictPositive( vals[[ "chP0" ]], "Change point (T)" )
+    validateParameterStrictPositive( vals[[ "HR0" ]], "HR0")
+    validateParameterStrictPositive( vals[[ "HR1" ]], "HR1")
+    validate( need(vals[[ "HR0" ]] < 1, "HR t<T needs to be less than 1"))
+    validate( need(vals[[ "HR1" ]] < 1, "HR t>T needs to be less than 1"))
+    validateParameterStrictPositive( vals[[ "ctrlM0" ]], "ctrlM0" )
+    validateParameterStrictPositive( vals[[ "ctrlM1" ]], "ctrlM1" )
+    validateParameterStrictPositive( vals[[ "shape1" ]], "Weibull shape" )
   }
   
-  validateParameterBtw0and1( input$alpha, "alpha" )
-  validateParameterBtw0and1( input$power, "power" )
+  validateParameterBtw0and1( vals[[ "alpha" ]], "alpha" )
+  validateParameterBtw0and1( vals[[ "power" ]], "power" )
 }
 
 
@@ -126,9 +130,8 @@ parseParameters <- function( query ){
 }
 
 getMultipleNumeric <- function( val, varName, maxValue = Inf ){
-  validate( need(is.character(val) && val >"", "Need to provide prediction time points" ) )
   xvals <- strsplit( val, "," )[[1]]
-  validate( need(length(xvals)>0, "Need to provide prediction time points" ) )
+  validate( need(length(xvals)>0, "X2: Need to provide prediction time points" ) )
   for( i in seq_along(xvals) ){
     xvals[i] <- as.numeric( xvals[i] )
     validate( need( !is.na(xvals[i]), paste0( varName, " needs to be numeric" ) ) )
