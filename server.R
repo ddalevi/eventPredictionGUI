@@ -229,15 +229,19 @@ shinyServer( function( input, output, session ) {
       strsplit(x, paste0( "(?<=.{", n, "})" ), perl = TRUE)[[1]]
     }
     port <- session$clientData$url_port
+    urlpath <- session$clientData$url_pathname
     baseurl <- session$clientData$url_hostname 
     if( !is.null(port) && port > "" ) baseurl <- paste0( baseurl, ":", port )
-
+    if( !is.null(urlpath) && urlpath > "" ) baseurl <- paste0( baseurl, urlpath )
+    
     myurl <- as.character( getURL( baseurl, mem.vals ) )    
     myurl <- paste0( wrapLines(myurl), collapse = ' <br> '  )
-    mystr <- paste0( "The current state of the application can be reproduced by saving this URL: <br><br>" )
+    mystr <- paste0( "<h2>State</h2>The current state of the application can be reproduced by saving this URL: <br><br>" )
     
     list( HTML(  mystr ),
-          HTML( myurl ) )
+          HTML( myurl ), 
+          br(), br(), 
+          HTML( paste0( "<h2>Session information</h2>", paste0( capture.output(sessionInfo()), collapse="<br>" ), "<br>") ) )
   })
   
   output$helpTxt <- renderText({
