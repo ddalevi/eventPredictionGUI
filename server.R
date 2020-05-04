@@ -12,7 +12,8 @@ shinyServer( function( input, output, session ) {
   
   # Read parameters from URL
   observe({
-    query <- parseQueryString(session$clientData$url_search)
+    res.url <- gsub( '%20', '', session$clientData$url_search )
+    query <- parseQueryString( res.url )
     mylist <- parseParameters( query )
     for( e in names( mylist ) ) {
       mem.vals[[ e ]] <- mylist[[ e ]]
@@ -212,13 +213,13 @@ shinyServer( function( input, output, session ) {
 
   output$epText <- renderText({
     text <- eventPrediction:::getFromParameterText(getPrediction(),DisplayOptions(StartDate=getStartDate(), 
-                                                                                  text.width=110, Tcrithr=FALSE ) ) 
+                                                                                  text.width=110, Tcrithr=TRUE) ) 
     HTML(text)
   })
   
   output$displayOptions <- renderUI({
     list(
-        dateInput( "startDate", "Study start date:"  ),
+        dateInput( "startDate", "Study start date:", value=mem.vals[["startDate"]]  ),
         checkboxInput( "useIntegers", "Months as integers:"  ) 
       )
   })

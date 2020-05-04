@@ -73,6 +73,7 @@ validateParameters <- function( input, vals ) {
   validate( need( vals[[ "studyDuration" ]] > vals[[ "recDuration" ]], 
                   "Study period needs to be longer than recruitment period" ) )
   validate( need( vals[[ "startDate" ]], "Need to provide a study start date"))
+  validate( need( !is.na( anytime( vals[[ "startDate" ]] ) ), "Need to provide start date in proper format!"))
   validate( need( vals[[ "eventOrTime" ]], "Need prediction parameters" ) )
   if( vals[[ "eventOrTime" ]] == "Predict events|time"  ){
     validate( need( !is.null( vals[[ "timePred" ]]), " Loading ... " ))  
@@ -117,7 +118,7 @@ parseParameters <- function( query ){
     }
   }
   # String params
-  for( e in c("timePred", "eventPred", "useDropouts", "twoSided"  ) ) {
+  for( e in c("timePred", "eventPred", "useDropouts", "twoSided", "startDate"  ) ) {
     if( !is.null( query[[ e ]] ) ){
       xval <- as.character( query[[ e ]] )
       if( !is.na(xval) ) {
