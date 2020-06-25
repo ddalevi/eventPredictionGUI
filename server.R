@@ -83,7 +83,7 @@ shinyServer( function( input, output, session ) {
   getPrediction <- reactive({
     study <- getStudy()
     validate( need( mem.vals[[ "eventOrTime" ]], "Need prediction parameters" ) )
-    if( mem.vals[[ "eventOrTime" ]] == "Predict events|time"  ){
+    if( mem.vals[[ "eventOrTime" ]] == "Predict_events|time"  ){
       xvals <- getMultipleNumeric( mem.vals[[ "timePred" ]], "Predict time", mem.vals[["studyDuration"]] ) 
       prediction <- predict(study, time.pred=xvals )
     } else {
@@ -122,7 +122,7 @@ shinyServer( function( input, output, session ) {
               },
               "predictParams" = {
                 list(
-                  selectInput( "eventOrTime", "Predict: ", c( "Predict events|time", "Predict time|events" ) ),
+                  selectInput( "eventOrTime", "Predict: ", c( "Predict_events|time", "Predict_time|events" ), mem.vals[["eventOrTime"]] ),
                   uiOutput( "eventOrTimeSel" )
                 )
               },
@@ -194,9 +194,11 @@ shinyServer( function( input, output, session ) {
   
   output$eventOrTimeSel <- renderUI({
     validate( need( mem.vals[["eventOrTime"]], "loading" ) )
-    if( mem.vals[["eventOrTime"]] == "Predict events|time" ){
+    if( mem.vals[["eventOrTime"]] == "Predict_events|time" ){
+      validate( need( mem.vals[["timePred"]], "loading" ) )
       textInput( "timePred", "Time [months]: ", value=mem.vals[["timePred"]])
     } else {
+      validate( need( mem.vals[["eventPred"]], "loading" ) )
       textInput( "eventPred", "Number of events: ", value=mem.vals[["eventPred"]])
     }
   })

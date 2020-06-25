@@ -39,7 +39,7 @@ getParamDefaultValues <- function(){
     "shape1" = 1,
     
     # Prediction params
-    "eventOrTime"= "Predict events|time",
+    "eventOrTime"= "Predict_events|time",
     "timePred"="10,15",
     "eventPred" = "200,400",
     
@@ -75,12 +75,13 @@ validateParameters <- function( input, vals ) {
   validate( need( vals[[ "startDate" ]], "Need to provide a study start date"))
   validate( need( !is.na( anytime( vals[[ "startDate" ]] ) ), "Need to provide start date in proper format!"))
   validate( need( vals[[ "eventOrTime" ]], "Need prediction parameters" ) )
-  if( vals[[ "eventOrTime" ]] == "Predict events|time"  ){
+  if( vals[[ "eventOrTime" ]] == "Predict_events|time"  ){
     validate( need( !is.null( vals[[ "timePred" ]]), " Loading ... " ))  
-    xvals <- getMultipleNumeric( vals[[ "timePred" ]], "Predict time", vals[[ "studyDuration" ]] ) 
+    xvals <- getMultipleNumeric( vals[[ "timePred" ]], "Predict_time", vals[[ "studyDuration" ]] ) 
     validate( need( vals[[ "studyDuration" ]] >= max( xvals ), "Prediction time point exceeds study duration" ) )
   } else {
-    validate( need( !is.null( vals[[ "eventPred" ]]), " Loading ... " ) )  
+    validate( need( !is.null( vals[[ "eventPred" ]]) && !is.null( vals[[ "numPatients" ]] ), " Loading ... " ) )
+    vals[[ "eventPred" ]] <- as.character( vals[[ "eventPred" ]] )
     xvals <- getMultipleNumeric( vals[[ "eventPred" ]], "Number of predicted events", vals[[ "numPatients" ]] ) 
     validate( need( vals[[ "numPatients" ]] >= max( xvals ), "Too few patients compared to predicted number of events" ) )
   }
@@ -118,7 +119,7 @@ parseParameters <- function( query ){
     }
   }
   # String params
-  for( e in c("timePred", "eventPred", "useDropouts", "twoSided", "startDate"  ) ) {
+  for( e in c( "eventOrTime", "timePred", "eventPred", "useDropouts", "twoSided", "startDate"  ) ) {
     if( !is.null( query[[ e ]] ) ){
       xval <- as.character( query[[ e ]] )
       if( !is.na(xval) ) {

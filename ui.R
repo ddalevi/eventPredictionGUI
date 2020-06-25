@@ -8,9 +8,9 @@ source( "params.R" )
 source( "help.R" )
 source( "about.R" )
 
-VERSION <- 0.1
+VERSION <- "1.0"
 
-navbarPage( paste0( "Event Prediction GUI (v. ", VERSION, ")" ), 
+navbarPage( paste0( "Event Prediction GUI (v ", VERSION, ")" ), 
             theme = shinytheme( "yeti" ), selected = "Parametric", fluid=TRUE, 
   
    tags$head(
