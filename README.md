@@ -1,3 +1,6 @@
 # Event prediction shiny GUI
 
-This is some basic shiny code to run the functionality of the event prediction R-package available at: ...
+This is a shiny GUI to perform parametric predictions using the R event prediction package:
+
+https://github.com/scientific-computing-solutions/eventPrediction
+
